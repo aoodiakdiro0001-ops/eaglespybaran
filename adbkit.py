@@ -66,7 +66,7 @@ def props(device):
     for line in out.splitlines():
         if ": [" in line:
             k, v = line.split(": [", 1)
-            k = k.strip()
+            k = k.strip().strip("[]").strip()
             if k in wanted:
                 info[k.split(".")[-1]] = v.rstrip("]").strip()
     return info
@@ -110,14 +110,9 @@ def pkg_permissions(device, pkg):
     out = run(["shell", "dumpsys", "package", pkg], device=device,
               timeout=25)
     granted = []
-    for line in out.splitlines():
-        line = line.strip()
-        for dgr in DANGEROUS:
-            if line.endswith("permission." + dgr) and (
-                    "granted=true" in line or "GRANTED" in line
-                    or ": granted=true" in line):
-                if dgr not in granted:
-                    granted.append(dgr)
+    for dgr in DANGEROUS:
+        if ("permission." + dgr) in out:
+            granted.append(dgr)
     return granted
 
 

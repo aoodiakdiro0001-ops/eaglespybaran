@@ -21,7 +21,8 @@ def test_parsers():
     orig = adbkit.run
     adbkit.run = lambda *a, **k: "List of devices attached\nR58T\tdevice\nxyz\toffline\n"
     devs = adbkit.devices()
-    assert devs == [{"serial": "R58T", "state": "device"}], devs
+    assert devs == [{"serial": "R58T", "state": "device"},
+                    {"serial": "xyz", "state": "offline"}], devs
 
     # getprop parsing
     adbkit.run = lambda *a, **k: (
@@ -51,13 +52,15 @@ def test_parsers():
     s = adbkit.storage("R58T")
     assert s["total"] == "500G" and s["use_%"] == "42%", s
 
-    # permission parsing
+    # permission detection: any dangerous perm requested by the package
     adbkit.run = lambda *a, **k: (
+        "requested permissions:\n"
         "  android.permission.CAMERA: granted=true\n"
         "  android.permission.RECORD_AUDIO: granted=false\n"
-        "  android.permission.READ_SMS: granted=true\n")
+        "  android.permission.READ_SMS: granted=true\n"
+        "  install permissions:\n")
     g = adbkit.pkg_permissions("R58T", "com.x")
-    assert g == ["CAMERA", "READ_SMS"], g
+    assert g == ["RECORD_AUDIO", "CAMERA", "READ_SMS"], g
 
     adbkit.run = orig
     print("PARSER TESTS PASS")
