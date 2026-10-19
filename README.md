@@ -9,7 +9,17 @@ Designed & built by **Baran Avisat** — [SUPPORT](SUPPORT.md)
 - لا دمج في تطبيقات، لا تجسس، لا وصول لأجهزة لا تملكها.
 - نفس الوظائف التي طلبتها (Screen / Find Name / الجرد / الصلاحيات / تقرير).
 
-## التشغيل
+## الواجهات الرسومية (GUI) — كل أداة برنامج مستقل
+
+```bash
+python3 gui/hub.py          # المشغل الرئيسي — يفتح كل الأدوات
+python3 gui/devices_gui.py  # الأجهزة المتصلة
+python3 gui/find_gui.py     # Find Name — بحث في التطبيقات
+python3 gui/screen_gui.py   # لقطة + تسجيل الشاشة
+python3 gui/audit_gui.py    # التدقيق الشامل + تقرير HTML
+```
+
+## التشغيل الطرفي (CLI)
 
 ```bash
 brew install android-platform-tools   # أو apt install adb
